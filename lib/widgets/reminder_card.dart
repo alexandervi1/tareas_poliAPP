@@ -41,11 +41,11 @@ class ReminderCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(Icons.edit, color: Colors.blue), // Ajusta el color del ícono si es necesario
+                icon: Icon(Icons.edit, color: Colors.black), // Ajusta el color del ícono si es necesario
                 onPressed: onEdit,
               ),
               IconButton(
-                icon: Icon(Icons.delete, color: Colors.red), // Ajusta el color del ícono si es necesario
+                icon: Icon(Icons.delete, color: Colors.black), // Ajusta el color del ícono si es necesario
                 onPressed: onDelete,
               ),
             ],

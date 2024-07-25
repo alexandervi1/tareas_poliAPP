@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tareas_poli/widgets/widgets.dart';
+import 'package:intl/intl.dart'; // Importa intl para formatear fechas
 
 import '../models/models.dart';
 
@@ -22,7 +22,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     final name = _nameController.text;
     final subject = _subjectController.text;
     final description = _descriptionController.text;
-    
+
     if (name.isEmpty || subject.isEmpty || description.isEmpty) {
       return;
     }
@@ -32,6 +32,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       subject: subject,
       description: description,
       date: _selectedDate,
+      color: Colors.blue, // Color por defecto si se eliminó la opción
     );
 
     widget.onSave(task);
@@ -40,6 +41,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final DateFormat formatter = DateFormat('dd/MM/yyyy');
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Agregar Tarea'),
@@ -64,7 +67,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('Fecha: ${_selectedDate.toLocal().toShortDateString()}'),
+                Text('Fecha: ${formatter.format(_selectedDate)}'),
                 TextButton(
                   onPressed: () async {
                     final pickedDate = await showDatePicker(
@@ -83,6 +86,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
               ],
             ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveTask,
               child: Text('Guardar Tarea'),
