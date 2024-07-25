@@ -13,7 +13,7 @@ class AddNoteScreen extends StatefulWidget {
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  Color _selectedColor = Colors.blue; // Color predeterminado
+  Color _selectedColor = Color(0xFFFCF7D1); // Color predeterminado
 
   void _saveNote() {
     final title = _titleController.text;

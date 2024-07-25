@@ -255,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             );
           },
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFFFCF7D1),
           child: Icon(Icons.add),
         ),
         drawer: Drawer(
@@ -264,12 +264,12 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Color(0xFFFCF7D1),
                 ),
                 child: Text(
                   'Menú',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 24,
                   ),
                 ),

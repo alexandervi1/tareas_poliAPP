@@ -11,36 +11,47 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Perfil'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFFFCF7D1),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.grey[300],
-              child: Icon(Icons.person, size: 60, color: Colors.white),
-            ),
-            SizedBox(height: 20),
-            Text('Nombre: ${profileProvider.firstName} ${profileProvider.lastName}'),
-            Text('Código Estudiantil: ${profileProvider.studentCode}'),
-            Text('Semestre: ${profileProvider.semester}'),
-            Text('Correo Electrónico: ${profileProvider.email}'),
-            Text('Facultad: ${profileProvider.faculty}'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsScreen(),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      radius: constraints.maxWidth * 0.15, // Ajusta el tamaño del avatar
+                      backgroundColor: Colors.grey[300],
+                      child: Icon(Icons.person, size: constraints.maxWidth * 0.1, color: Colors.white),
+                    ),
                   ),
-                );
-              },
-              child: Text('Editar Perfil'),
-            ),
-          ],
+                  SizedBox(height: 20),
+                  Text('Nombre: ${profileProvider.firstName} ${profileProvider.lastName}', style: TextStyle(fontSize: 18)),
+                  Text('Código Estudiantil: ${profileProvider.studentCode}', style: TextStyle(fontSize: 18)),
+                  Text('Semestre: ${profileProvider.semester}', style: TextStyle(fontSize: 18)),
+                  Text('Correo Electrónico: ${profileProvider.email}', style: TextStyle(fontSize: 18)),
+                  Text('Facultad: ${profileProvider.faculty}', style: TextStyle(fontSize: 18)),
+                  SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingsScreen(),
+                          ),
+                        );
+                      },
+                      child: Text('Editar Perfil'),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
