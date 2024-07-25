@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tareas_poli/widgets/widgets.dart';
-
-import '../models/models.dart';
+import '../models/models.dart'; // Asegúrate de que la ruta sea correcta
 
 class AddNoteScreen extends StatefulWidget {
   final Function(Note) onSave;
@@ -14,24 +12,23 @@ class AddNoteScreen extends StatefulWidget {
 
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final _titleController = TextEditingController();
-  final _subjectController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
+  final _contentController = TextEditingController();
+  Color _selectedColor = Colors.blue; // Color predeterminado
 
   void _saveNote() {
     final title = _titleController.text;
-    final subject = _subjectController.text;
-    final description = _descriptionController.text;
-    
-    if (title.isEmpty || subject.isEmpty || description.isEmpty) {
+    final content = _contentController.text;
+
+    if (title.isEmpty || content.isEmpty) {
       return;
     }
 
     final note = Note(
       title: title,
-      subject: subject,
-      description: description,
-      date: _selectedDate,
+      subject: '', // No se usa el campo de materia en esta versión
+      description: content,
+      date: DateTime.now(),
+      color: _selectedColor, // Asignar el color a la nota
     );
 
     widget.onSave(note);
@@ -53,41 +50,52 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
               decoration: InputDecoration(labelText: 'Título'),
             ),
             TextField(
-              controller: _subjectController,
-              decoration: InputDecoration(labelText: 'Materia'),
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Descripción'),
+              controller: _contentController,
+              decoration: InputDecoration(labelText: 'Contenido'),
+              maxLines: 5, // Permite múltiples líneas para el contenido
             ),
             SizedBox(height: 20),
+            Text('Color de Nota'),
+            SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Text('Fecha: ${_selectedDate.toLocal().toShortDateString()}'),
-                TextButton(
-                  onPressed: () async {
-                    final pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: _selectedDate,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (pickedDate != null) {
-                      setState(() {
-                        _selectedDate = pickedDate;
-                      });
-                    }
-                  },
-                  child: Text('Seleccionar Fecha'),
-                ),
+                _buildColorOption(Colors.red),
+                _buildColorOption(Colors.orange),
+                _buildColorOption(Colors.yellow),
+                _buildColorOption(Colors.green),
+                _buildColorOption(Colors.blue),
+                _buildColorOption(Colors.purple),
               ],
             ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveNote,
               child: Text('Guardar Nota'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorOption(Color color) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedColor = color;
+        });
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: _selectedColor == color ? Colors.black : Colors.transparent,
+            width: 2,
+          ),
         ),
       ),
     );

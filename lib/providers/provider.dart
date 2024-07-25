@@ -1,66 +1,67 @@
 import 'package:flutter/material.dart';
 
-import '../models/models.dart';
+class ProfileProvider with ChangeNotifier {
+  String _firstName = '';
+  String _lastName = '';
+  String _studentCode = '';
+  int _semester = 1;
+  String _email = '';
+  String _faculty = 'FADE';
 
-class TaskProvider with ChangeNotifier {
-  List<Task> _tasks = [];
-  
-  List<Task> get tasks => _tasks;
+  // Getters
+  String get firstName => _firstName;
+  String get lastName => _lastName;
+  String get studentCode => _studentCode;
+  int get semester => _semester;
+  String get email => _email;
+  String get faculty => _faculty;
 
-  void addTask(Task task) {
-    _tasks.add(task);
+  // Setters
+  void setFirstName(String firstName) {
+    _firstName = firstName;
     notifyListeners();
   }
 
-  void removeTask(Task task) {
-    _tasks.remove(task);
+  void setLastName(String lastName) {
+    _lastName = lastName;
     notifyListeners();
   }
 
-  void updateTask(Task task) {
-    // Implementa la lógica para actualizar una tarea
-    notifyListeners();
-  }
-}
-
-class NoteProvider with ChangeNotifier {
-  List<Note> _notes = [];
-
-  List<Note> get notes => _notes;
-
-  void addNote (Note note) {
-    _notes.add(note);
+  void setStudentCode(String studentCode) {
+    _studentCode = studentCode;
     notifyListeners();
   }
 
-  void removeNote (Note note) {
-    _notes.remove(note);
+  void setSemester(int semester) {
+    _semester = semester;
     notifyListeners();
   }
 
-  void updateNote (Note note) {
-    // Implementa la lógica para actualizar una nota
-    notifyListeners();
-  }
-}
-
-class ReminderProvider with ChangeNotifier {
-  List<Reminder> _reminders = [];
-
-  List<Reminder> get reminders => _reminders;
-
-  void addReminder (Reminder reminder) {
-    _reminders.add(reminder);
+  void setEmail(String email) {
+    _email = email;
     notifyListeners();
   }
 
-  void removeReminder (Reminder reminder) {
-    _reminders.remove(reminder);
+  void setFaculty(String faculty) {
+    _faculty = faculty;
     notifyListeners();
   }
 
-  void updateReminder (Reminder reminder) {
-    // Implementa la lógica para actualizar un recordatorio
+  // Método para actualizar todo el perfil
+  void updateProfile({
+    required String firstName,
+    required String lastName,
+    required String studentCode,
+    required int semester,
+    required String email,
+    required String faculty,
+  }) {
+    _firstName = firstName;
+    _lastName = lastName;
+    _studentCode = studentCode;
+    _semester = semester;
+    _email = email;
+    _faculty = faculty;
     notifyListeners();
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/provider.dart'; // Asegúrate de que la ruta sea correcta
-import 'settings_screen.dart'; // Importa SettingsScreen
+import '../screens/settings_screen.dart'; // Importa SettingsScreen aquí
+
 
 class ProfileScreen extends StatelessWidget {
   @override

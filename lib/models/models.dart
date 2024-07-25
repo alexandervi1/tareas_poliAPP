@@ -1,4 +1,5 @@
-// Modelo para una tarea
+import 'dart:ui';
+
 class Task {
   final String name;
   final String subject;
@@ -12,35 +13,56 @@ class Task {
     required this.date,
   });
 
-  get title => null;
-
-  DateTime? get dueDate => null;
-
-  get id => null;
-
-  copyWith({required String title, required String description, required DateTime dueDate}) {}
+  Task copyWith({
+    String? name,
+    String? subject,
+    String? description,
+    DateTime? date,
+  }) {
+    return Task(
+      name: name ?? this.name,
+      subject: subject ?? this.subject,
+      description: description ?? this.description,
+      date: date ?? this.date,
+    );
+  }
 }
 
-// Modelo para una nota
 class Note {
   final String title;
   final String subject;
   final String description;
   final DateTime date;
+  final Color color;
 
   Note({
     required this.title,
     required this.subject,
     required this.description,
     required this.date,
+    required this.color,
   });
 
-  Object? get id => null;
+  // Si content puede ser nulo, usa String? en lugar de String
+  String get content => description; // Devuelve un valor no nulo por defecto
 
-  copyWith({required String title, required String subject, required String description, required DateTime date}) {}
+  Note copyWith({
+    String? title,
+    String? subject,
+    String? description,
+    DateTime? date,
+    Color? color,
+  }) {
+    return Note(
+      title: title ?? this.title,
+      subject: subject ?? this.subject,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      color: color ?? this.color,
+    );
+  }
 }
 
-// Modelo para un recordatorio
 class Reminder {
   final String title;
   final String subject;
@@ -54,7 +76,20 @@ class Reminder {
     required this.date,
   });
 
-  get id => null;
+  // Si details puede ser nulo, usa String? en lugar de String
+  String get details => description; // Devuelve un valor no nulo por defecto
 
-  copyWith({required String title, required String description, required DateTime date}) {}
+  Reminder copyWith({
+    String? title,
+    String? subject,
+    String? description,
+    DateTime? date,
+  }) {
+    return Reminder(
+      title: title ?? this.title,
+      subject: subject ?? this.subject,
+      description: description ?? this.description,
+      date: date ?? this.date,
+    );
+  }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../models/models.dart';
 
 class EditTaskScreen extends StatefulWidget {
@@ -14,23 +13,34 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
-  late TextEditingController _titleController;
+  late TextEditingController _nameController;
+  late TextEditingController _subjectController;
   late TextEditingController _descriptionController;
   late DateTime _dueDate;
 
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.task.title);
+    _nameController = TextEditingController(text: widget.task.name); // Cambié a task.name
+    _subjectController = TextEditingController(text: widget.task.subject); // Añadido para el subject
     _descriptionController = TextEditingController(text: widget.task.description);
-    _dueDate = widget.task.dueDate!;
+    _dueDate = widget.task.date; // Cambié a task.date para coincidir con el modelo actualizado
   }
 
   void _saveTask() {
+    if (_nameController.text.isEmpty || _descriptionController.text.isEmpty) {
+      // Validación básica
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Todos los campos son obligatorios')),
+      );
+      return;
+    }
+
     final updatedTask = widget.task.copyWith(
-      title: _titleController.text,
+      name: _nameController.text, // Cambié a task.name
+      subject: _subjectController.text, // Añadido para el subject
       description: _descriptionController.text,
-      dueDate: _dueDate,
+      date: _dueDate, // Cambié a task.date
     );
     widget.onSave(updatedTask);
     Navigator.pop(context);
@@ -41,7 +51,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Editar Tarea'),
-        backgroundColor: Color(0xFFFCF7D1), // Color de la AppBar
+        backgroundColor: Color(0xFFFCF7D1),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -49,8 +59,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             TextField(
-              controller: _titleController,
+              controller: _nameController,
               decoration: InputDecoration(labelText: 'Título'),
+            ),
+            TextField(
+              controller: _subjectController,
+              decoration: InputDecoration(labelText: 'Materia'), // Añadido para el subject
             ),
             TextField(
               controller: _descriptionController,
@@ -77,7 +91,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: _saveTask,
-              child: const Text('Guardar Tarea'),
+              child: Text('Guardar Tarea'),
             ),
           ],
         ),

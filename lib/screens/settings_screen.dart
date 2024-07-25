@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/provider.dart'; // Asegúrate de que la ruta sea correcta
 
 class SettingsScreen extends StatefulWidget {
-  final bool profileData;
-
-  SettingsScreen({required this.profileData});
-
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String firstName = '';
-  String lastName = '';
-  String studentCode = '';
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _studentCodeController;
+  late TextEditingController _emailController;
   int semester = 1;
-  String email = '';
   String faculty = 'FADE';
 
   final List<String> faculties = [
@@ -24,10 +22,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final List<int> semesters = List<int>.generate(10, (i) => i + 1);
 
   @override
+  void initState() {
+    super.initState();
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+
+    _firstNameController = TextEditingController(text: profileProvider.firstName);
+    _lastNameController = TextEditingController(text: profileProvider.lastName);
+    _studentCodeController = TextEditingController(text: profileProvider.studentCode);
+    _emailController = TextEditingController(text: profileProvider.email);
+    semester = profileProvider.semester;
+    faculty = profileProvider.faculty;
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _studentCodeController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _saveProfile() {
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+
+    profileProvider.updateProfile(
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      studentCode: _studentCodeController.text,
+      semester: semester,
+      email: _emailController.text,
+      faculty: faculty,
+    );
+
+    Navigator.pop(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Perfil'),
+        title: Text('Configuración de Perfil'),
         backgroundColor: Colors.blue,
       ),
       body: Padding(
@@ -41,15 +76,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Icon(Icons.person, size: 60, color: Colors.white),
               ),
               SizedBox(height: 20),
-              _buildTextField('Nombre', (value) => firstName = value),
-              _buildTextField('Apellido', (value) => lastName = value),
-              _buildTextField('Código Estudiantil', (value) => studentCode = value),
+              _buildTextField('Nombre', _firstNameController),
+              _buildTextField('Apellido', _lastNameController),
+              _buildTextField('Código Estudiantil', _studentCodeController),
               _buildDropdown('Semestre', semesters, semester, (value) {
                 setState(() {
                   semester = value as int;
                 });
               }),
-              _buildTextField('Correo Electrónico', (value) => email = value),
+              _buildTextField('Correo Electrónico', _emailController, email: true),
               _buildDropdown('Facultad', faculties, faculty, (value) {
                 setState(() {
                   faculty = value as String;
@@ -57,9 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               }),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Implementa la lógica para guardar los datos del perfil
-                },
+                onPressed: _saveProfile,
                 child: Text('Guardar'),
               ),
             ],
@@ -69,15 +102,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildTextField(String label, Function(String) onChanged) {
+  Widget _buildTextField(String label, TextEditingController controller, {bool email = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),
         ),
-        onChanged: onChanged,
+        keyboardType: email ? TextInputType.emailAddress : TextInputType.text,
       ),
     );
   }
