@@ -3,11 +3,17 @@ import '../models/models.dart';
 import 'add_task_screen.dart';
 import 'add_note_screen.dart';
 import 'add_reminder_screen.dart';
-import 'edit_task_screen.dart'; // Asegúrate de importar los archivos necesarios
-import 'edit_note_screen.dart'; // Asegúrate de importar los archivos necesarios
-import 'edit_reminder_screen.dart'; // Asegúrate de importar los archivos necesarios
+import 'edit_task_screen.dart';
+import 'edit_note_screen.dart';
+import 'edit_reminder_screen.dart';
+import '../custom_search_delegate.dart'; // Importa CustomSearchDelegate
+import '../widgets/task_card.dart'; // Asegúrate de que la ruta es correcta
+import '../widgets/note_card.dart'; // Asegúrate de que la ruta es correcta
+import '../widgets/reminder_card.dart'; // Asegúrate de que la ruta es correcta
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -16,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Task> _tasks = [];
   final List<Note> _notes = [];
   final List<Reminder> _reminders = [];
+  String _searchQuery = '';
 
   void _addTask(Task task) {
     setState(() {
@@ -161,6 +168,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _performSearch() async {
+    await showSearch<dynamic>(
+      context: context,
+      delegate: CustomSearchDelegate(
+        tasks: _tasks,
+        notes: _notes,
+        reminders: _reminders,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -182,9 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search),
-              onPressed: () {
-                // Implementa la funcionalidad de búsqueda aquí
-              },
+              onPressed: _performSearch, // Usa el método de búsqueda
             ),
           ],
           bottom: TabBar(
@@ -255,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             );
           },
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFFFCF7D1),
           child: Icon(Icons.add),
         ),
         drawer: Drawer(
@@ -264,12 +280,12 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Color(0xFFFCF7D1),
                 ),
                 child: Text(
                   'Menú',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 24,
                   ),
                 ),
@@ -314,12 +330,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTaskList() {
-    if (_tasks.isEmpty) {
+    final filteredTasks = _tasks
+        .where((task) => task.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+        .toList();
+    if (filteredTasks.isEmpty) {
       return Center(child: Text('No tienes tareas aún.'));
     }
-    return Column(
-      children: _tasks.map((task) {
-        return TaskTile(
+    return ListView(
+      children: filteredTasks.map((task) {
+        return TaskCard(
           task: task,
           onEdit: () => _editTask(task),
           onDelete: () => _confirmDeleteTask(task),
@@ -329,12 +348,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildNoteList() {
-    if (_notes.isEmpty) {
+    final filteredNotes = _notes
+        .where((note) => note.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+        .toList();
+    if (filteredNotes.isEmpty) {
       return Center(child: Text('No tienes notas aún.'));
     }
-    return Column(
-      children: _notes.map((note) {
-        return NoteTile(
+    return ListView(
+      children: filteredNotes.map((note) {
+        return NoteCard(
           note: note,
           onEdit: () => _editNote(note),
           onDelete: () => _confirmDeleteNote(note),
@@ -344,161 +366,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildReminderList() {
-    if (_reminders.isEmpty) {
+    final filteredReminders = _reminders
+        .where((reminder) => reminder.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+        .toList();
+    if (filteredReminders.isEmpty) {
       return Center(child: Text('No tienes recordatorios aún.'));
     }
-    return Column(
-      children: _reminders.map((reminder) {
-        return ReminderTile(
+    return ListView(
+      children: filteredReminders.map((reminder) {
+        return ReminderCard(
           reminder: reminder,
           onEdit: () => _editReminder(reminder),
           onDelete: () => _confirmDeleteReminder(reminder),
         );
       }).toList(),
-    );
-  }
-}
-
-class TaskTile extends StatelessWidget {
-  final Task task;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-
-  const TaskTile({
-    required this.task,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: ListTile(
-        title: Text(task.name), // Cambiado a task.name
-        subtitle: Text(task.description),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: onEdit,
-            ),
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: onDelete,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class NoteTile extends StatelessWidget {
-  final Note note;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-
-  const NoteTile({
-    required this.note,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: ListTile(
-        title: Text(note.title),
-        subtitle: Text(note.content),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: onEdit,
-            ),
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: onDelete,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ReminderTile extends StatelessWidget {
-  final Reminder reminder;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-
-  const ReminderTile({
-    required this.reminder,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: ListTile(
-        title: Text(reminder.title),
-        subtitle: Text(reminder.details),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: onEdit,
-            ),
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: onDelete,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

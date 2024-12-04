@@ -63,40 +63,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Configuración de Perfil'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFFFCF7D1),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey[300],
-                child: Icon(Icons.person, size: 60, color: Colors.white),
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      radius: constraints.maxWidth * 0.2,
+                      backgroundColor: Colors.grey[300],
+                      child: Icon(Icons.person, size: constraints.maxWidth * 0.15, color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(height: constraints.maxWidth * 0.05),
+                  _buildTextField('Nombre', _firstNameController),
+                  _buildTextField('Apellido', _lastNameController),
+                  _buildTextField('Código Estudiantil', _studentCodeController),
+                  _buildDropdown('Semestre', semesters, semester, (value) {
+                    setState(() {
+                      semester = value as int;
+                    });
+                  }),
+                  _buildTextField('Correo Electrónico', _emailController, email: true),
+                  _buildDropdown('Facultad', faculties, faculty, (value) {
+                    setState(() {
+                      faculty = value as String;
+                    });
+                  }),
+                  SizedBox(height: constraints.maxWidth * 0.05),
+                  ElevatedButton(
+                    onPressed: _saveProfile,
+                    child: Text('Guardar'),
+                  ),
+                ],
               ),
-              SizedBox(height: 20),
-              _buildTextField('Nombre', _firstNameController),
-              _buildTextField('Apellido', _lastNameController),
-              _buildTextField('Código Estudiantil', _studentCodeController),
-              _buildDropdown('Semestre', semesters, semester, (value) {
-                setState(() {
-                  semester = value as int;
-                });
-              }),
-              _buildTextField('Correo Electrónico', _emailController, email: true),
-              _buildDropdown('Facultad', faculties, faculty, (value) {
-                setState(() {
-                  faculty = value as String;
-                });
-              }),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveProfile,
-                child: Text('Guardar'),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

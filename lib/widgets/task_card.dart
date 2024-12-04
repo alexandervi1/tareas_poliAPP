@@ -57,12 +57,12 @@ class TaskCard extends StatelessWidget {
             spacing: 12, // Espacio entre los íconos
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.edit, color: Colors.blue),
+                icon: Icon(Icons.edit, color: Colors.black),
                 onPressed: onEdit,
                 tooltip: 'Editar', // Añadido para accesibilidad
               ),
               IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
+                icon: Icon(Icons.delete, color: Colors.black),
                 onPressed: onDelete,
                 tooltip: 'Eliminar', // Añadido para accesibilidad
               ),

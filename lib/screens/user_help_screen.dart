@@ -6,7 +6,7 @@ class UserHelpScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Ayuda al Usuario'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFFFCF7D1),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
